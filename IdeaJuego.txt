@@ -1,6 +1,0 @@
-* Hacer que detecte si es en computador o dispositivo móvil
-
-* Si es en dispositivo móvil entonces que salgan las flechas para jugar
-  arriba abajo, izquierda, derecha
-
-* Y otra serpiente del mismo tamaño que persiga a la serpiente del jugador por medio de un método numerico y si la serpiente enemiga te toca mueres y que la velocidad sea incremental por medio de método cerrado de bisección
