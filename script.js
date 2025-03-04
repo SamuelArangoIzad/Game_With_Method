@@ -17,14 +17,14 @@ let snake = [{ x: 100, y: 50 }];
 let snakeDir = { x: 10, y: 0 };
 let food = { x: getRandomPosition(width), y: getRandomPosition(height) };
 let enemy = [{ x: 300, y: 200 }];
-let enemyDir = { x: 10, y: 0 };
+let enemyDir = { x: 0, y: 0 };
 let score = 0;
 let running = false;
-let enemyAILevel = 0.1;
-let speedMultiplier = 1.0; // Velocidad inicial (x1.0)
+let enemyAILevel = 0.05;
+let speedMultiplier = 1.0;
 
 // Música
-const gameMusic = new Audio("Octavio Mesa - Al Rojo Vivo.mp3"); 
+const gameMusic = new Audio("ARCADE.mp3"); 
 gameMusic.loop = true; 
 
 document.getElementById("startButton").addEventListener("click", startGame);
@@ -42,41 +42,34 @@ function resetGame() {
     snakeDir = { x: 10, y: 0 };
     food = { x: getRandomPosition(width), y: getRandomPosition(height) };
     enemy = [{ x: 300, y: 200 }];
-    enemyDir = { x: 10, y: 0 };
+    enemyDir = { x: 0, y: 0 };
     score = 0;
-    enemyAILevel = 0.1;
+    enemyAILevel = 0.05;
 }
 
-// Generar posición aleatoria
 function getRandomPosition(limit) {
     return Math.floor(Math.random() * (limit / 10)) * 10;
 }
 
-// Cambiar velocidad del juego
 function changeSpeed() {
-    const speeds = [0.5, 1.0, 2.0, 5.0]; // Opciones de velocidad
+    const speeds = [0.5, 1.0, 2.0, 5.0];
     let index = speeds.indexOf(speedMultiplier);
-    index = (index + 1) % speeds.length; // Ciclar entre velocidades
+    index = (index + 1) % speeds.length;
     speedMultiplier = speeds[index];
     document.getElementById("velocityButton").textContent = `x${speedMultiplier}`;
 }
 
-// Escuchar teclas
-// Escuchar teclas y prevenir el desplazamiento de la página
 document.addEventListener("keydown", (event) => {
-    // Evita que la página se desplace con las teclas de flecha
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
         event.preventDefault();
     }
 
-    // Control de dirección de la serpiente
     if (event.key === "ArrowUp" && snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
     if (event.key === "ArrowDown" && snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
     if (event.key === "ArrowLeft" && snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
     if (event.key === "ArrowRight" && snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
 });
 
-// Bucle del juego
 function gameLoop() {
     if (!running) return;
 
@@ -92,16 +85,14 @@ function gameLoop() {
     drawFood();
     drawScore();
 
-    let baseSpeed = Math.max(30, 100 - score * 3); // Velocidad base según puntuación
-    let adjustedSpeed = baseSpeed / speedMultiplier; // Aplicar multiplicador de velocidad
+    let baseSpeed = Math.max(30, 100 - score * 3);
+    let adjustedSpeed = baseSpeed / speedMultiplier;
     setTimeout(gameLoop, adjustedSpeed);
 }
 
-// Mover la serpiente
 function moveSnake() {
     let newHead = { x: snake[0].x + snakeDir.x, y: snake[0].y + snakeDir.y };
 
-    // Borde de pantalla
     if (newHead.x < 0) newHead.x = width - 10;
     if (newHead.x >= width) newHead.x = 0;
     if (newHead.y < 0) newHead.y = height - 10;
@@ -109,43 +100,39 @@ function moveSnake() {
 
     snake.unshift(newHead);
 
-    // Comer comida
     if (newHead.x === food.x && newHead.y === food.y) {
         score++;
         food = { x: getRandomPosition(width), y: getRandomPosition(height) };
-        enemyAILevel = Math.min(0.9, score / 20);
+        enemyAILevel = Math.min(0.9, enemyAILevel + 0.05);
     } else {
         snake.pop();
     }
 }
 
-// Mover el enemigo
 function moveEnemy() {
-    if (Math.random() < enemyAILevel) {
-        if (enemy[0].x < snake[0].x) enemyDir = { x: 10, y: 0 };
-        else if (enemy[0].x > snake[0].x) enemyDir = { x: -10, y: 0 };
-        else if (enemy[0].y < snake[0].y) enemyDir = { x: 0, y: 10 };
-        else if (enemy[0].y > snake[0].y) enemyDir = { x: 0, y: -10 };
-    }
+    let targetX = snake[0].x;
+    let targetY = snake[0].y;
+    let currentX = enemy[0].x;
+    let currentY = enemy[0].y;
 
-    let newHead = { x: enemy[0].x + enemyDir.x, y: enemy[0].y + enemyDir.y };
-    enemy.unshift(newHead);
-    enemy.pop();
+    // Interpolación lineal para mover el enemigo suavemente
+    enemy[0].x += (targetX - currentX) * enemyAILevel;
+    enemy[0].y += (targetY - currentY) * enemyAILevel;
+
+    // Redondear la posición a la cuadrícula
+    enemy[0].x = Math.round(enemy[0].x / 10) * 10;
+    enemy[0].y = Math.round(enemy[0].y / 10) * 10;
 }
 
-// Verificar colisiones
 function checkCollisions() {
-    for (let segment of snake) {
-        if (segment.x === enemy[0].x && segment.y === enemy[0].y) {
-            running = false;
-            gameMusic.pause();
-            gameMusic.currentTime = 0;
-            alert("¡Perdiste! Puntuación: " + score);
-        }
+    if (Math.abs(snake[0].x - enemy[0].x) < 10 && Math.abs(snake[0].y - enemy[0].y) < 10) {
+        running = false;
+        gameMusic.pause();
+        gameMusic.currentTime = 0;
+        setTimeout(() => alert("¡Perdiste! Puntuación: " + score), 100);
     }
 }
 
-// Dibujar la serpiente
 function drawSnake() {
     ctx.fillStyle = GREEN;
     for (let segment of snake) {
@@ -153,21 +140,16 @@ function drawSnake() {
     }
 }
 
-// Dibujar el enemigo
 function drawEnemy() {
     ctx.fillStyle = RED;
-    for (let segment of enemy) {
-        ctx.fillRect(segment.x, segment.y, 10, 10);
-    }
+    ctx.fillRect(enemy[0].x, enemy[0].y, 10, 10);
 }
 
-// Dibujar la comida
 function drawFood() {
     ctx.fillStyle = WHITE;
     ctx.fillRect(food.x, food.y, 10, 10);
 }
 
-// Dibujar la puntuación
 function drawScore() {
     ctx.fillStyle = WHITE;
     ctx.font = "20px Arial";
