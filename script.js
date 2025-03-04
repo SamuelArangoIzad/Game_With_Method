@@ -116,8 +116,8 @@ function moveEnemy() {
     let currentY = enemy[0].y;
 
     // Interpolación lineal para mover el enemigo suavemente (enemyAILevel) 
-    enemy[0].x += (targetX - currentX) * score;
-    enemy[0].y += (targetY - currentY) * score;
+    enemy[0].x += (targetX - currentX) * (score * 0.15);
+    enemy[0].y += (targetY - currentY) * (score * 0.15);
 
     // Redondear la posición a la cuadrícula
     enemy[0].x = Math.round(enemy[0].x / 10) * 10;
