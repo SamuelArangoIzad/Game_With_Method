@@ -1,0 +1,79 @@
+.pollito {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: #ffdd57;
+    border-radius: 50%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.ala {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #ffcc33;
+    border-radius: 50%;
+    top: 50px;
+}
+.ala.izquierda { left: -10px; transform: rotate(-20deg); }
+.ala.derecha { right: -10px; transform: rotate(20deg); }
+.ojo {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: black;
+    border-radius: 50%;
+    top: 40px;
+}
+.ojo.izquierdo { left: 35px; }
+.ojo.derecho { right: 35px; }
+.pico {
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    background: orange;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.patita {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    background: orange;
+    bottom: -10px;
+    border-radius: 5px;
+}
+.patita.izquierda { left: 40px; }
+.patita.derecha { right: 40px; }
+.flor {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    animation: girar 3s linear infinite;
+}
+.petalo {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: pink;
+    border-radius: 50%;
+}
+.petalo:nth-child(1) { top: -5px; left: 5px; }
+.petalo:nth-child(2) { top: 5px; left: -5px; }
+.petalo:nth-child(3) { top: 5px; left: 15px; }
+.petalo:nth-child(4) { top: 15px; left: 5px; }
+.centro {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: orange;
+    border-radius: 50%;
+    top: 5px;
+    left: 5px;
+}
+@keyframes girar {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg); }
+}

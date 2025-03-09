@@ -4,25 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PythonIC</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="pollito/pollito.css">
+    <link rel="stylesheet" href="Designbotones.css">
+    <script src="pollito/pollito.js"></script>
+
 </head>
 <body>
-    <h1>🐍 Culebra-Culebrosa 🐍</h1>
+    <h1>🐍 Culebra-Culebrosa 🐥</h1>
     <canvas id="gameCanvas"></canvas>
     <button id="startButton">Start Game</button>
+    <button id="exitButton">Salir</button>
     <button id="velocityButton">x1.0</button>
+
+        <!-- Controles táctiles -->
+        <div id="controls" style="display: none;">
+            <button id="upButton">⬆</button>
+            <br>
+            <button id="leftButton">⬅</button>
+            <button id="rightButton">➡</button>
+            <br>
+            <button id="downButton">⬇</button>
+        </div>
+        
     
-    <script src="script.js"></script>
+    <script src="logicGame/script.js"></script>
 
     <div class="developers">
         <p>PythonIC - Developed by</p>
     </div>
+
     <div class="name-developers">
         <p><a href="https://github.com/SamuelArangoIzad" target="_blank">Samuel</a></p>
-        <p>Tomas</p>
-        <p>Nicolas</p>
-        <p>Karen</p>
-        <p>Steven</p>
+        <p><a href="https://github.com/Tomaxus" target="_blank">Tomas</a></p>
+        <p><a href="https://github.com/Leyder11" target="_blank">Nicolas</a></p>
+        <p><a href="https://github.com/KarenLisseth18" target="_blank">Karen</a></p>
+        <p><a href="https://github.com/Ncrod" target="_blank">Steven</a></p>
     </div>
 
     <div class="rules">
@@ -35,12 +52,29 @@
         </p>
         <p>
             Puedes cambiar la velocidad del juego para desafiarte aún más. 
-            El objetivo es obtener la mayor cantidad de puntos antes de que el enemigo aprenda 
-            tu estrategia y logre atraparte.
+            El objetivo es obtener la mayor cantidad de puntos antes de que el pollito te pique 
+            la cabeza entonces mejora tu estrategia y evita que te atrape.
         </p>
         <p><strong>¡SUERTE!</strong></p>
     </div>
     
+
+    <div class="pollito">
+        <div class="ala izquierda"></div>
+        <div class="ala derecha"></div>
+        <div class="ojo izquierdo"></div>
+        <div class="ojo derecho"></div>
+        <div class="pico"></div>
+        <div class="patita izquierda"></div>
+        <div class="patita derecha"></div>
+        <div class="flor">
+            <div class="petalo"></div>
+            <div class="petalo"></div>
+            <div class="petalo"></div>
+            <div class="petalo"></div>
+            <div class="centro"></div>
+        </div>
+    </div>
     
 </body>
 </html>

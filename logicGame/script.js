@@ -1,15 +1,18 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const width = 600;
-const height = 400;
+const startButton = document.getElementById("startButton");
+const exitButton = document.getElementById("exitButton");
+
+let width = window.innerWidth * 0.9;  // 90% del ancho de la pantalla
+let height = window.innerHeight * 0.5; // 50% del alto de la pantalla
 canvas.width = width;
 canvas.height = height;
 
 // Colores
 const WHITE = "#FFFFFF";
 const GREEN = "#00FF00";
-const RED = "#FF0000";
+const RED = "#FFD700";
 const BLACK = "#000000";
 
 // Variables del juego
@@ -23,19 +26,43 @@ let running = false;
 let enemyAILevel = 0.05;
 let speedMultiplier = 1.0;
 
+
+
+startButton.addEventListener("click", function() {// Llamar a la función que inicia el juego
+    startButton.textContent = "Reiniciar";
+});
+
+exitButton.addEventListener("click", function() {
+    location.reload(); // Recarga completamente la página
+});
+
 // Música
-const gameMusic = new Audio("ARCADE.mp3"); 
-gameMusic.loop = true; 
+const gameMusic = new Audio("audio/ARCADE.mp3");
+gameMusic.loop = true;
 
 document.getElementById("startButton").addEventListener("click", startGame);
 document.getElementById("velocityButton").addEventListener("click", changeSpeed);
 
 function startGame() {
-    resetGame();
-    running = true;
-    gameLoop();
-    gameMusic.play();
+    if (running) {
+        running = false; // Detiene el juego actual
+        setTimeout(() => {
+            resetGame();
+            running = true;
+            gameLoop();
+            gameMusic.play();
+            startButton.addEventListener("click", function() {// Llamar a la función que inicia el juego
+                startButton.textContent = "Reiniciar";
+            });
+        }, 100); // Pequeño retraso para evitar conflictos
+    } else {
+        resetGame();
+        running = true;
+        gameLoop();
+        gameMusic.play();
+    }
 }
+
 
 function resetGame() {
     snake = [{ x: 100, y: 50 }];
@@ -48,7 +75,7 @@ function resetGame() {
 }
 
 function getRandomPosition(limit) {
-    return Math.floor(Math.random() * (limit / 10)) * 10;
+    return Math.floor(Math.random() * ((limit - 10) / 10)) * 10;
 }
 
 function changeSpeed() {
@@ -69,6 +96,7 @@ document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft" && snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
     if (event.key === "ArrowRight" && snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
 });
+
 
 function gameLoop() {
     if (!running) return;
@@ -100,7 +128,7 @@ function moveSnake() {
 
     snake.unshift(newHead);
 
-    if (newHead.x === food.x && newHead.y === food.y) {
+    if (Math.abs(newHead.x - food.x) < 10 && Math.abs(newHead.y - food.y) < 10) {
         score++;
         food = { x: getRandomPosition(width), y: getRandomPosition(height) };
         enemyAILevel = Math.min(0.9, enemyAILevel + 0.05);
@@ -115,14 +143,24 @@ function moveEnemy() {
     let currentX = enemy[0].x;
     let currentY = enemy[0].y;
 
-    // Interpolación lineal para mover el enemigo suavemente (enemyAILevel) 
-    enemy[0].x += (targetX - currentX) * (score * 0.15);
-    enemy[0].y += (targetY - currentY) * (score * 0.15);
+    let diffX = targetX - currentX;
+    let diffY = targetY - currentY;
 
-    // Redondear la posición a la cuadrícula
-    enemy[0].x = Math.round(enemy[0].x / 10) * 10;
-    enemy[0].y = Math.round(enemy[0].y / 10) * 10;
+    let distance = Math.sqrt(diffX * diffX + diffY * diffY) || 1; // Evita división por 0
+
+    let normX = diffX / distance;
+    let normY = diffY / distance;
+
+    let moveSpeed = 0.1 + score * 0.01 + enemyAILevel;
+
+    enemy[0].x += Math.round(normX * moveSpeed * 10);
+    enemy[0].y += Math.round(normY * moveSpeed * 10);
+
+    // Evitar que el enemigo quede fuera del canvas
+    enemy[0].x = Math.max(0, Math.min(width - 10, enemy[0].x));
+    enemy[0].y = Math.max(0, Math.min(height - 10, enemy[0].y));
 }
+
 
 function checkCollisions() {
     if (Math.abs(snake[0].x - enemy[0].x) < 10 && Math.abs(snake[0].y - enemy[0].y) < 10) {
@@ -155,3 +193,26 @@ function drawScore() {
     ctx.font = "20px Arial";
     ctx.fillText("Puntuación: " + score, 10, 20);
 }
+
+
+//MOBIL SECTION
+
+// Mostrar controles en móviles
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    document.getElementById("controls").style.display = "block";
+}
+
+
+
+document.getElementById("upButton").addEventListener("click", function () {
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
+});
+document.getElementById("downButton").addEventListener("click", function () {
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
+});
+document.getElementById("leftButton").addEventListener("click", function () {
+    if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
+});
+document.getElementById("rightButton").addEventListener("click", function () {
+    if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
+});
