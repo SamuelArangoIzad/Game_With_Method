@@ -143,23 +143,16 @@ function moveEnemy() {
     let currentX = enemy[0].x;
     let currentY = enemy[0].y;
 
-    let diffX = targetX - currentX;
-    let diffY = targetY - currentY;
+    let lerpFactor = 0.05 + score * 0.002 + enemyAILevel * 0.005; // Factor de interpolación
 
-    let distance = Math.sqrt(diffX * diffX + diffY * diffY) || 1; // Evita división por 0
-
-    let normX = diffX / distance;
-    let normY = diffY / distance;
-
-    let moveSpeed = 0.1 + score * 0.01 + enemyAILevel;
-
-    enemy[0].x += Math.round(normX * moveSpeed * 10);
-    enemy[0].y += Math.round(normY * moveSpeed * 10);
+    enemy[0].x = Math.round(currentX + (targetX - currentX) * lerpFactor);
+    enemy[0].y = Math.round(currentY + (targetY - currentY) * lerpFactor);
 
     // Evitar que el enemigo quede fuera del canvas
     enemy[0].x = Math.max(0, Math.min(width - 10, enemy[0].x));
     enemy[0].y = Math.max(0, Math.min(height - 10, enemy[0].y));
 }
+
 
 
 function checkCollisions() {
