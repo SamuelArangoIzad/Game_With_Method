@@ -138,17 +138,26 @@ function moveSnake() {
 }
 
 function moveEnemy() {
-    let targetX = snake[0].x;
-    let targetY = snake[0].y;
-    let currentX = enemy[0].x;
-    let currentY = enemy[0].y;
-
-    let lerpFactor = 0.05 + score * 0.002 + enemyAILevel * 0.005; // Factor de interpolación
-
-    enemy[0].x = Math.round(currentX + (targetX - currentX) * lerpFactor);
-    enemy[0].y = Math.round(currentY + (targetY - currentY) * lerpFactor);
-
-    // Evitar que el enemigo quede fuera del canvas
+    const x0 = enemy[0].x;
+    const y0 = enemy[0].y;
+    const x1 = snake[0].x;
+    const y1 = snake[0].y;
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    
+    // Usamos el speedMultiplier global (0.5, 1.0, 2.0 o 5.0)
+    const step = 0.5 * speedMultiplier; // Base de 2 pixels multiplicado
+    
+    if (Math.abs(dx) > Math.abs(dy)) {
+        enemy[0].x += dx > 0 ? step : -step;
+        enemy[0].y = y0 + (dy/dx) * (enemy[0].x - x0);
+    } else if (dy !== 0) {
+        enemy[0].y += dy > 0 ? step : -step;
+        enemy[0].x = x0 + (dx/dy) * (enemy[0].y - y0);
+    }
+    
+    enemy[0].x = Math.round(enemy[0].x);
+    enemy[0].y = Math.round(enemy[0].y);
     enemy[0].x = Math.max(0, Math.min(width - 10, enemy[0].x));
     enemy[0].y = Math.max(0, Math.min(height - 10, enemy[0].y));
 }
