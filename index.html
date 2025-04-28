@@ -3,78 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PythonIC</title>
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="pollito/pollito.css">
-    <link rel="stylesheet" href="Designbotones.css">
-    <script src="pollito/pollito.js"></script>
+    <title>🐍 Culebra-Culebrosa 🐥</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --primary-color: #4CAF50;
+            --secondary-color: #FFC107;
+            --panel-bg: rgba(30, 30, 30, 0.9);
+            --board-light: #2A2A2A;
+            --board-dark: #1E1E1E;
+        }
 
+        .light-mode {
+            --bg-color: #f5f5f5;
+            --text-color: #333333;
+            --primary-color: #2E7D32;
+            --secondary-color: #FF9800;
+            --panel-bg: rgba(255, 255, 255, 0.9);
+            --board-light: #E8F5E9;
+            --board-dark: #C8E6C9;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            margin-bottom: 10px;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 90vw;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #gameCanvas {
+            border: 4px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+            background: var(--board-dark);
+            margin-bottom: 20px;
+        }
+
+        #gameUI {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: var(--panel-bg);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+
+        #scoreDisplay {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        #mainControls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: var(--panel-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--primary-color);
+        }
+
+        button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        #velocityButton {
+            background: var(--secondary-color);
+            color: #121212;
+            font-weight: bold;
+        }
+
+        #themeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        #mobileControls {
+            display: none;
+            margin-top: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .mobile-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(76, 175, 80, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            user-select: none;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .mobile-btn:active {
+            background: var(--primary-color);
+        }
+
+        #upBtn { grid-column: 2; grid-row: 1; }
+        #leftBtn { grid-column: 1; grid-row: 2; }
+        #downBtn { grid-column: 2; grid-row: 2; }
+        #rightBtn { grid-column: 3; grid-row: 2; }
+
+        .game-info {
+            width: 90%;
+            max-width: 800px;
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--panel-bg);
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .developers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .developer {
+            background: var(--panel-bg);
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+        }
+
+        .developer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .developer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            #mobileControls {
+                display: grid;
+            }
+            
+            #mainControls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>🐍 Culebra-Culebrosa 🐥</h1>
-    <canvas id="gameCanvas"></canvas>
-    <button id="startButton">Start Game</button>
-    <button id="exitButton">Salir</button>
-    <button id="velocityButton">x1.0</button>
-
-        <!-- Controles táctiles -->
-        <div id="controls" style="display: none;">
-            <button id="upButton">⬆</button>
-            <br>
-            <button id="leftButton">⬅</button>
-            <button id="rightButton">➡</button>
-            <br>
-            <button id="downButton">⬇</button>
-        </div>
-        
     
-    <script src="logicGame/script.js"></script>
+<!--<button id="themeToggle">🌓</button> -->
+    <header>
+        <h1>🐍 Culebra-Culebrosa 🐥</h1>
+    </header>
 
-    <div class="developers">
-        <p>PythonIC - Developed by</p>
+    <div id="gameContainer">
+        <div id="gameUI">
+            <div id="scoreContainer">
+                <div id="scoreDisplay">Puntuación: <span id="scoreValue">0</span></div>
+            </div>
+            <div id="controls">
+              <button id="startButton" class="control-btn">Jugar</button>
+              <button id="exitButton" class="control-btn">Salir</button>
+              <button id="velocityButton" class="control-btn">x1.0</button>
+            </div>
+          </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="mobileControls">
+            <div class="mobile-btn" id="upBtn">↑</div>
+            <div class="mobile-btn" id="leftBtn">←</div>
+            <div class="mobile-btn" id="downBtn">↓</div>
+            <div class="mobile-btn" id="rightBtn">→</div>
+        </div>
     </div>
 
-    <div class="name-developers">
-        <p><a href="https://github.com/SamuelArangoIzad" target="_blank">Samuel</a></p>
-        <p><a href="https://github.com/Tomaxus" target="_blank">Tomas</a></p>
-        <p><a href="https://github.com/Leyder11" target="_blank">Nicolas</a></p>
-        <p><a href="https://github.com/KarenLisseth18" target="_blank">Karen</a></p>
-        <p><a href="https://github.com/Ncrod" target="_blank">Steven</a></p>
-    </div>
-
-    <div class="rules">
-        <h2>REGLAS</h2>
-        <p>
-            Las reglas son sencillas: el cuadrado rojo sigue tus movimientos utilizando interpolación 
-            para predecir tu posición y atraparte. A medida que avanza el juego, el enemigo mejora 
-            su precisión y se adapta a tus patrones de movimiento, ajustando su velocidad para 
-            interceptarte de manera más eficiente.
-        </p>
-        <p>
-            Puedes cambiar la velocidad del juego para desafiarte aún más. 
-            El objetivo es obtener la mayor cantidad de puntos antes de que el pollito te pique 
-            la cabeza entonces mejora tu estrategia y evita que te atrape.
-        </p>
+    <div class="game-info">
+        <h2>REGLAS DEL JUEGO</h2>
+        <p>Controla la serpiente para comer la fruta y crecer, pero cuidado con el pollito que te persigue.</p>
+        <p>El pollito usa interpolación para predecir tus movimientos y se vuelve más inteligente con el tiempo.</p>
+        <p>Cambia la velocidad del juego para aumentar el desafío.</p>
         <p><strong>¡SUERTE!</strong></p>
     </div>
-    
 
-    <div class="pollito">
-        <div class="ala izquierda"></div>
-        <div class="ala derecha"></div>
-        <div class="ojo izquierdo"></div>
-        <div class="ojo derecho"></div>
-        <div class="pico"></div>
-        <div class="patita izquierda"></div>
-        <div class="patita derecha"></div>
-        <div class="flor">
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="centro"></div>
+    <div class="developers">
+        <div class="developer">
+            <p>Desarrollado por:</p>
+        </div>
+        <div class="developer">
+            <a href="https://github.com/SamuelArangoIzad" target="_blank">Samuel</a>
+        </div>
+        <div class="developer">
+            <a href="https://github.com/Tomaxus" target="_blank">Tomás</a>
+        </div>
+        <div class="developer">
+            <a href="https://github.com/Leyder11" target="_blank">Nicolás</a>
+        </div>
+        <div class="developer">
+            <a href="https://github.com/KarenLisseth18" target="_blank">Karen</a>
+        </div>
+        <div class="developer">
+            <a href="https://github.com/Ncrod" target="_blank">Steven</a>
         </div>
     </div>
+
+    <script>
+        // Tema claro/oscuro
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            themeToggle.textContent = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        });
+
+        // Inicializar tema según preferencia del sistema
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.body.classList.add('light-mode');
+            themeToggle.textContent = '🌙';
+        }
+    </script>
+    <script src="logicGame/script.js"></script>
     
 </body>
 </html>
