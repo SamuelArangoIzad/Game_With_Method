@@ -221,6 +221,9 @@ function drawFood() {
     ctx.fillStyle = WHITE;
     ctx.fillRect(food.x, food.y, 10, 10);
 }
+function drawScore() {
+    
+}
 
 // Redimensionamiento responsive
 window.addEventListener("resize", function() {
