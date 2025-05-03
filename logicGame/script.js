@@ -133,7 +133,7 @@ function getRandomPosition(limit) {
 }
 
 function changeSpeed() {
-    const speeds = [0.5, 1.0, 2.0, 5.0];
+    const speeds = [ 1.0, 2.0, 5.0, 10.0];
     const currentIndex = speeds.indexOf(speedMultiplier);
     speedMultiplier = speeds[(currentIndex + 1) % speeds.length];
     velocityButton.textContent = `x${speedMultiplier}`;
