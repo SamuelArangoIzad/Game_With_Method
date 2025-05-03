@@ -146,6 +146,8 @@ function gameLoop() {
     drawFood();
     drawScore();
 
+    document.getElementById("scoreValue").textContent = score;
+
     let baseSpeed = Math.max(30, 100 - score * 3);
     let adjustedSpeed = baseSpeed / speedMultiplier;
     setTimeout(gameLoop, adjustedSpeed);
