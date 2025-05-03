@@ -220,12 +220,6 @@ function drawFood() {
     ctx.fillRect(food.x, food.y, 10, 10);
 }
 
-function drawScore() {
-    ctx.fillStyle = WHITE;
-    ctx.font = "20px Arial";
-    ctx.fillText("Puntuación: " + score, 10, 20);
-}
-
 // Redimensionamiento responsive
 window.addEventListener("resize", function() {
     width = window.innerWidth * 0.9;
