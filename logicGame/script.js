@@ -196,25 +196,51 @@ function drawScore() {
     ctx.fillText("Puntuación: " + score, 10, 20);
 }
 
-
-//MOBIL SECTION
+// MOBILE CONTROLS - SECCIÓN CORREGIDA
 
 // Mostrar controles en móviles
 if (/Mobi|Android/i.test(navigator.userAgent)) {
-    document.getElementById("controls").style.display = "block";
+    document.getElementById("mobileControls").style.display = "grid";
 }
 
-
-
-document.getElementById("upButton").addEventListener("click", function () {
+// Eventos para los botones móviles (corregidos los IDs)
+document.getElementById("upBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
     if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
 });
-document.getElementById("downButton").addEventListener("click", function () {
+
+document.getElementById("downBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
     if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
 });
-document.getElementById("leftButton").addEventListener("click", function () {
+
+document.getElementById("leftBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
     if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
 });
-document.getElementById("rightButton").addEventListener("click", function () {
+
+document.getElementById("rightBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
+});
+
+// También agregamos eventos de clic para mayor compatibilidad
+document.getElementById("upBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
+});
+
+document.getElementById("downBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
+});
+
+document.getElementById("leftBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
+});
+
+document.getElementById("rightBtn").addEventListener("click", function(e) {
+    e.preventDefault();
     if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
 });
