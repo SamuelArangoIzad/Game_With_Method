@@ -26,88 +26,43 @@ let running = false;
 let enemyAILevel = 0.05;
 let speedMultiplier = 1.0;
 
+
+
+startButton.addEventListener("click", function() {// Llamar a la función que inicia el juego
+    startButton.textContent = "Reiniciar";
+});
+
+exitButton.addEventListener("click", function() {
+    location.reload(); // Recarga completamente la página
+});
+
 // Música
 const gameMusic = new Audio("audio/ARCADE.mp3");
 gameMusic.loop = true;
 
-// Event listeners
 document.getElementById("startButton").addEventListener("click", startGame);
 document.getElementById("velocityButton").addEventListener("click", changeSpeed);
-exitButton.addEventListener("click", function() {
-    location.reload();
-});
 
-// Controles de teclado
-document.addEventListener("keydown", (event) => {
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
-        event.preventDefault();
-    }
-
-    if (event.key === "ArrowUp" && snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
-    if (event.key === "ArrowDown" && snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
-    if (event.key === "ArrowLeft" && snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
-    if (event.key === "ArrowRight" && snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
-});
-
-// Controles móviles
-if (/Mobi|Android/i.test(navigator.userAgent)) {
-    document.getElementById("mobileControls").style.display = "grid";
-    
-    document.getElementById("upBtn").addEventListener("touchstart", function(e) {
-        e.preventDefault();
-        if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
-    });
-    document.getElementById("downBtn").addEventListener("touchstart", function(e) {
-        e.preventDefault();
-        if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
-    });
-    document.getElementById("leftBtn").addEventListener("touchstart", function(e) {
-        e.preventDefault();
-        if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
-    });
-    document.getElementById("rightBtn").addEventListener("touchstart", function(e) {
-        e.preventDefault();
-        if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
-    });
-
-    // También para clics (por si acaso)
-    document.getElementById("upBtn").addEventListener("click", function(e) {
-        e.preventDefault();
-        if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
-    });
-    document.getElementById("downBtn").addEventListener("click", function(e) {
-        e.preventDefault();
-        if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
-    });
-    document.getElementById("leftBtn").addEventListener("click", function(e) {
-        e.preventDefault();
-        if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
-    });
-    document.getElementById("rightBtn").addEventListener("click", function(e) {
-        e.preventDefault();
-        if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
-    });
-}
-
-// Funciones del juego
 function startGame() {
     if (running) {
-        running = false;
+        running = false; // Detiene el juego actual
         setTimeout(() => {
             resetGame();
             running = true;
             gameLoop();
             gameMusic.play();
-            startButton.textContent = "Reiniciar";
-        }, 100);
+            startButton.addEventListener("click", function() {// Llamar a la función que inicia el juego
+                startButton.textContent = "Reiniciar";
+            });
+        }, 100); // Pequeño retraso para evitar conflictos
     } else {
         resetGame();
         running = true;
         gameLoop();
         gameMusic.play();
-        startButton.textContent = "Reiniciar";
     }
 }
+
 
 function resetGame() {
     snake = [{ x: 100, y: 50 }];
@@ -131,6 +86,18 @@ function changeSpeed() {
     document.getElementById("velocityButton").textContent = `x${speedMultiplier}`;
 }
 
+document.addEventListener("keydown", (event) => {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+    }
+
+    if (event.key === "ArrowUp" && snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
+    if (event.key === "ArrowDown" && snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
+    if (event.key === "ArrowLeft" && snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
+    if (event.key === "ArrowRight" && snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
+});
+
+
 function gameLoop() {
     if (!running) return;
 
@@ -145,8 +112,6 @@ function gameLoop() {
     drawEnemy();
     drawFood();
     drawScore();
-
-    document.getElementById("scoreValue").textContent = score;
 
     let baseSpeed = Math.max(30, 100 - score * 3);
     let adjustedSpeed = baseSpeed / speedMultiplier;
@@ -180,7 +145,8 @@ function moveEnemy() {
     const dx = x1 - x0;
     const dy = y1 - y0;
     
-    const step = 0.5 * speedMultiplier;
+    // Usamos el speedMultiplier global (0.5, 1.0, 2.0 o 5.0)
+    const step = 0.5 * speedMultiplier; // Base de 2 pixels multiplicado
     
     if (Math.abs(dx) > Math.abs(dy)) {
         enemy[0].x += dx > 0 ? step : -step;
@@ -195,6 +161,8 @@ function moveEnemy() {
     enemy[0].x = Math.max(0, Math.min(width - 10, enemy[0].x));
     enemy[0].y = Math.max(0, Math.min(height - 10, enemy[0].y));
 }
+
+
 
 function checkCollisions() {
     if (Math.abs(snake[0].x - enemy[0].x) < 10 && Math.abs(snake[0].y - enemy[0].y) < 10) {
@@ -221,17 +189,59 @@ function drawFood() {
     ctx.fillStyle = WHITE;
     ctx.fillRect(food.x, food.y, 10, 10);
 }
+
 function drawScore() {
-    // Elimina estas líneas:
     ctx.fillStyle = WHITE;
     ctx.font = "20px Arial";
     ctx.fillText("Puntuación: " + score, 10, 20);
 }
 
-// Redimensionamiento responsive
-window.addEventListener("resize", function() {
-    width = window.innerWidth * 0.9;
-    height = window.innerHeight * 0.5;
-    canvas.width = width;
-    canvas.height = height;
+
+// MOBILE CONTROLS - SECCIÓN CORREGIDA
+
+// Mostrar controles en móviles
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    document.getElementById("mobileControls").style.display = "grid";
+}
+
+// Eventos para los botones móviles (corregidos los IDs)
+document.getElementById("upBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
+});
+
+document.getElementById("downBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
+});
+
+document.getElementById("leftBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
+});
+
+document.getElementById("rightBtn").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
+});
+
+// También agregamos eventos de clic para mayor compatibilidad
+document.getElementById("upBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: -10 };
+});
+
+document.getElementById("downBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.y === 0) snakeDir = { x: 0, y: 10 };
+});
+
+document.getElementById("leftBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.x === 0) snakeDir = { x: -10, y: 0 };
+});
+
+document.getElementById("rightBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (snakeDir.x === 0) snakeDir = { x: 10, y: 0 };
 });
